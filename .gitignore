@@ -1,0 +1,15 @@
+target/
+
+# Baseline de comparação visual: gerada automaticamente na primeira execução
+# em cada ambiente (ver VisualComparisonUtil). Não versionamos para evitar
+# falsos negativos entre SOs/navegadores diferentes (sua máquina x CI).
+src/test/resources/baseline/
+
+.idea/
+*.iml
+.vscode/
+.classpath
+.project
+.settings/
+*.log
+.DS_Store
