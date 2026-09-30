@@ -1,7 +1,9 @@
 package com.luisrew.saucedemo.pages;
 
+import com.luisrew.saucedemo.utils.Interactions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -25,14 +27,28 @@ public class CheckoutPage {
     }
 
     public void fillDeliveryInfo(String firstName, String lastName, String postalCode) {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameInput)).sendKeys(firstName);
-        driver.findElement(lastNameInput).sendKeys(lastName);
-        driver.findElement(postalCodeInput).sendKeys(postalCode);
-        wait.until(ExpectedConditions.elementToBeClickable(continueButton)).click();
+        WebElement firstNameField = wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameInput));
+        Interactions.typeReliably(firstNameField, firstName);
+
+        WebElement lastNameField = driver.findElement(lastNameInput);
+        Interactions.typeReliably(lastNameField, lastName);
+
+        WebElement postalCodeField = driver.findElement(postalCodeInput);
+        Interactions.typeReliably(postalCodeField, postalCode);
+
+        Interactions.clickUntil(
+                driver,
+                () -> wait.until(ExpectedConditions.elementToBeClickable(continueButton)),
+                () -> !driver.findElements(finishButton).isEmpty()
+        );
     }
 
     public void finishOrder() {
-        wait.until(ExpectedConditions.elementToBeClickable(finishButton)).click();
+        Interactions.clickUntil(
+                driver,
+                () -> wait.until(ExpectedConditions.elementToBeClickable(finishButton)),
+                () -> !driver.findElements(confirmationHeader).isEmpty()
+        );
     }
 
     public String getConfirmationMessage() {

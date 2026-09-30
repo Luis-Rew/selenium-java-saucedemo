@@ -1,5 +1,6 @@
 package com.luisrew.saucedemo.pages;
 
+import com.luisrew.saucedemo.utils.Interactions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -31,9 +32,17 @@ public class LoginPage {
     }
 
     public void login(String username, String password) {
-        driver.findElement(usernameInput).sendKeys(username);
-        driver.findElement(passwordInput).sendKeys(password);
-        driver.findElement(loginButton).click();
+        WebElement usernameField = driver.findElement(usernameInput);
+        Interactions.typeReliably(usernameField, username);
+
+        WebElement passwordField = driver.findElement(passwordInput);
+        Interactions.typeReliably(passwordField, password);
+
+        Interactions.clickUntil(
+                driver,
+                () -> wait.until(ExpectedConditions.elementToBeClickable(loginButton)),
+                () -> !driver.getCurrentUrl().equals(URL) || !driver.findElements(errorMessage).isEmpty()
+        );
     }
 
     public String getErrorMessage() {

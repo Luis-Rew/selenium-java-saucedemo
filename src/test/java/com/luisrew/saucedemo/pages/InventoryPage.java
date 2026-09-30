@@ -1,5 +1,6 @@
 package com.luisrew.saucedemo.pages;
 
+import com.luisrew.saucedemo.utils.Interactions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -34,12 +35,24 @@ public class InventoryPage {
 
     public void addProductToCart(String productName) {
         wait.until(ExpectedConditions.visibilityOfElementLocated(pageTitle));
+
+        Interactions.clickUntil(
+                driver,
+                () -> findItemButton(productName),
+                () -> isAddedToCart(productName)
+        );
+    }
+
+    private boolean isAddedToCart(String productName) {
+        return "Remove".equalsIgnoreCase(findItemButton(productName).getText());
+    }
+
+    private WebElement findItemButton(String productName) {
         List<WebElement> items = driver.findElements(inventoryItems);
         for (WebElement item : items) {
             String name = item.findElement(By.className("inventory_item_name")).getText();
             if (name.equalsIgnoreCase(productName)) {
-                item.findElement(By.tagName("button")).click();
-                return;
+                return item.findElement(By.tagName("button"));
             }
         }
         throw new IllegalStateException("Produto não encontrado no catálogo: " + productName);

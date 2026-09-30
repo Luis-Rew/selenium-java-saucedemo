@@ -1,5 +1,6 @@
 package com.luisrew.saucedemo.pages;
 
+import com.luisrew.saucedemo.utils.Interactions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -13,6 +14,7 @@ public class CartPage {
     private final WebDriverWait wait;
 
     private final By checkoutButton = By.id("checkout");
+    private final By checkoutFirstNameField = By.id("first-name");
 
     public CartPage(WebDriver driver) {
         this.driver = driver;
@@ -20,6 +22,10 @@ public class CartPage {
     }
 
     public void goToCheckout() {
-        wait.until(ExpectedConditions.elementToBeClickable(checkoutButton)).click();
+        Interactions.clickUntil(
+                driver,
+                () -> wait.until(ExpectedConditions.elementToBeClickable(checkoutButton)),
+                () -> !driver.findElements(checkoutFirstNameField).isEmpty()
+        );
     }
 }
