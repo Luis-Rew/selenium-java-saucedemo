@@ -25,10 +25,10 @@ public class CheckoutPage {
     }
 
     public void fillDeliveryInfo(String firstName, String lastName, String postalCode) {
-        driver.findElement(firstNameInput).sendKeys(firstName);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameInput)).sendKeys(firstName);
         driver.findElement(lastNameInput).sendKeys(lastName);
         driver.findElement(postalCodeInput).sendKeys(postalCode);
-        driver.findElement(continueButton).click();
+        wait.until(ExpectedConditions.elementToBeClickable(continueButton)).click();
     }
 
     public void finishOrder() {

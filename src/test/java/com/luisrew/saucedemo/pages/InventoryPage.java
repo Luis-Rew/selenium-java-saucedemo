@@ -33,6 +33,7 @@ public class InventoryPage {
     }
 
     public void addProductToCart(String productName) {
+        wait.until(ExpectedConditions.visibilityOfElementLocated(pageTitle));
         List<WebElement> items = driver.findElements(inventoryItems);
         for (WebElement item : items) {
             String name = item.findElement(By.className("inventory_item_name")).getText();
@@ -49,6 +50,6 @@ public class InventoryPage {
     }
 
     public void goToCart() {
-        driver.findElement(cartLink).click();
+        wait.until(ExpectedConditions.elementToBeClickable(cartLink)).click();
     }
 }
