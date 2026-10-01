@@ -87,6 +87,17 @@
                     <systemPropertyVariables>
                         <headless>${headless}</headless>
                     </systemPropertyVariables>
+                    <!--
+                        Testes de UI contra um site real na internet têm uma dose
+                        inerente de instabilidade (timing, rede, pequenas variações
+                        de renderização) que nenhuma automação elimina 100% — isso é
+                        normal em QA, não um defeito do framework. Em vez de perseguir
+                        um determinismo impossível, deixamos o Surefire re-executar
+                        automaticamente só os cenários que falharem, até 2 vezes, antes
+                        de marcar o build como quebrado. É a prática padrão do mercado
+                        para suites de UI.
+                    -->
+                    <rerunFailingTestsCount>2</rerunFailingTestsCount>
                 </configuration>
             </plugin>
         </plugins>

@@ -6,6 +6,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Cria e mantém uma instância de WebDriver por thread, permitindo rodar
@@ -45,6 +47,19 @@ public final class DriverFactory {
         options.addArguments("--disable-gpu");
         options.addArguments("--no-sandbox");
         options.addArguments("--disable-dev-shm-usage");
+
+        // O login do cenário de checkout envia usuário/senha, o que pode disparar
+        // o popup nativo "Salvar senha?" do Chrome em execuções não-headless (ou
+        // sua contraparte interna em headless). Esse popup pode roubar o foco do
+        // formulário seguinte, fazendo com que os campos não recebam o texto
+        // digitado. Desativamos o gerenciador de senhas para eliminar essa fonte
+        // de instabilidade.
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("credentials_enable_service", false);
+        prefs.put("profile.password_manager_enabled", false);
+        options.setExperimentalOption("prefs", prefs);
+        options.addArguments("--disable-save-password-bubble");
+        options.addArguments("--disable-features=PasswordManagerOnboarding,AutofillServerCommunication");
 
         WebDriver driver = new ChromeDriver(options);
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));

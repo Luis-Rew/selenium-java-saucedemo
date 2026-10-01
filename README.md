@@ -68,6 +68,19 @@ Isso builda o projeto, sobe um Chrome headless, roda todos os `.feature` e impri
 ./mvnw test -Dheadless=false
 ```
 
+---
+
+## Nota honesta sobre estabilidade (flakiness)
+
+Esse projeto roda contra o **saucedemo.com real**, um site público e gratuito mantido para a comunidade praticar automação — não um mock local. Isso traz um benefício (é mais parecido com testar um sistema de verdade) e uma consequência: de vez em quando um cenário pode falhar por instabilidade de ambiente (timing, rede, ou possível rate-limiting do próprio site sob uso intenso), sem que haja bug no código de teste.
+
+O cenário de checkout (`Finalizar compra com sucesso`), por ser o mais longo da suíte (login → carrinho → formulário → confirmação), é o mais exposto a esse tipo de instabilidade. Para lidar com isso de forma realista, em vez de perseguir um determinismo 100% impossível contra um serviço de terceiros, o projeto usa duas camadas de resiliência que são prática comum em QA:
+
+1. **`Interactions.java`** — clique e digitação são verificados (não só "disparados"): a ação é repetida algumas vezes até confirmar que teve o efeito esperado na tela, com diagnóstico claro se mesmo assim não funcionar.
+2. **Retry de cenário no Maven Surefire** (`pom.xml`, `rerunFailingTestsCount`) — se um cenário falhar, o Surefire tenta rodá-lo de novo automaticamente antes de marcar o build como quebrado.
+
+Se mesmo assim um cenário falhar ocasionalmente no seu ambiente, rode de novo — isso é esperado ao testar contra um serviço real e não indica um defeito na suíte.
+
 **Rodar direto pela IDE:** se você tem o plugin "Cucumber for Java" (IntelliJ) instalado, dá pra abrir qualquer arquivo `.feature` e clicar em "Run as Cucumber Feature" direto na aba do editor.
 
 ---

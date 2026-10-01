@@ -33,10 +33,10 @@ public class LoginPage {
 
     public void login(String username, String password) {
         WebElement usernameField = driver.findElement(usernameInput);
-        Interactions.typeReliably(usernameField, username);
+        Interactions.typeReliably(driver, usernameField, username);
 
         WebElement passwordField = driver.findElement(passwordInput);
-        Interactions.typeReliably(passwordField, password);
+        Interactions.typeReliably(driver, passwordField, password);
 
         Interactions.clickUntil(
                 driver,

@@ -28,13 +28,13 @@ public class CheckoutPage {
 
     public void fillDeliveryInfo(String firstName, String lastName, String postalCode) {
         WebElement firstNameField = wait.until(ExpectedConditions.visibilityOfElementLocated(firstNameInput));
-        Interactions.typeReliably(firstNameField, firstName);
+        Interactions.typeReliably(driver, firstNameField, firstName);
 
         WebElement lastNameField = driver.findElement(lastNameInput);
-        Interactions.typeReliably(lastNameField, lastName);
+        Interactions.typeReliably(driver, lastNameField, lastName);
 
         WebElement postalCodeField = driver.findElement(postalCodeInput);
-        Interactions.typeReliably(postalCodeField, postalCode);
+        Interactions.typeReliably(driver, postalCodeField, postalCode);
 
         Interactions.clickUntil(
                 driver,
